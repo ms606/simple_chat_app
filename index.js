@@ -33,39 +33,42 @@ class App extends React.Component {
 			})
 		})
 	
-	 chatManager.connect()
-        .then(currentUser => {
-            this.currentUser = currentUser
-            this.currentUser.subscribeToRoom({
-            roomId: roomId,
-            hooks: {
-                onNewMessage: message => {
+	 // chatManager.connect()
+  //       .then(currentUser => {
+  //           this.currentUser = currentUser
+  //           this.currentUser.subscribeToRoom({
+  //           roomId: roomId,
+  //           hooks: {
+  //               onNewMessage: message => {
 
-                    this.setState({
-                        messages: [...this.state.messages, message]
-                    })
-                }
-            }
-        })
-      })
+  //                   this.setState({
+  //                       messages: [...this.state.messages, message]
+  //                   })
+  //               }
+  //           }
+  //       })
+  //     })
     }
 
     sendMessage(text) {
-    	this.currentUser.sendMessage({
-    		text,
-    		roomId: roomId
-    	})
+    	console.log("text",text);
+		console.log("dummy data 1",DUMMY_DATA);
+    	DUMMY_DATA.push(
+	    	{
+			senderId: "muffin",
+			text: text
+			}
+		) 
+		console.log("dummy data 2",DUMMY_DATA);
+		window.location.reload();
     }
-
-
-
 
     render() {
         return (
         	 <div className="app">
         	 <Title />
              <MessageList messages= {this.state.messages} />
-             {/*<SendMessageForm />*/}
+             <SendMessageForm sendMessage = {this.sendMessage} />
 
         	 </div>
         )
@@ -95,8 +98,49 @@ class MessageList extends React.Component {
 
 
 
+
+class SendMessageForm extends React.Component {
+	constructor() {
+	  super();
+	  this.state = {
+	  		message: ''
+	  }
+
+	  this.handleSubmit = this.handleSubmit.bind(this);
+	  this.handleChange = this.handleChange.bind(this);
+	}
+
+	handleSubmit(e){
+		e.preventDefault();
+		this.props.sendMessage(this.state.message);
+	}
+
+	handleChange(e){
+		this.setState({
+			message: e.target.value
+		})
+	}
+
+	render () {
+	 return (
+	 	<form
+	 	  onSubmit={this.handleSubmit}	
+	 	  className="send-message-form">
+	 		<input 
+	 		  onChange={this.handleChange}
+	 		  value = {this.state.message}
+	 		  placeholder ="Type your message and hit ENTER"
+	 		  type ="text"
+	 		/>	
+	 	</form>	
+		)
+	}    	
+}
+
+
 function Title() {
   return <p className="title">My awesome chat app</p>
 }
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
