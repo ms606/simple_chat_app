@@ -22,6 +22,8 @@ class App extends React.Component {
 		this.state = {
 			messages: DUMMY_DATA
 		}
+
+		this.sendMessage = this.sendMessage.bind(this);
 	}
 
 	componentDidMount(){
@@ -33,21 +35,7 @@ class App extends React.Component {
 			})
 		})
 	
-	 // chatManager.connect()
-  //       .then(currentUser => {
-  //           this.currentUser = currentUser
-  //           this.currentUser.subscribeToRoom({
-  //           roomId: roomId,
-  //           hooks: {
-  //               onNewMessage: message => {
-
-  //                   this.setState({
-  //                       messages: [...this.state.messages, message]
-  //                   })
-  //               }
-  //           }
-  //       })
-  //     })
+	
     }
 
     sendMessage(text) {
@@ -55,27 +43,33 @@ class App extends React.Component {
 		console.log("dummy data 1",DUMMY_DATA);
     	DUMMY_DATA.push(
 	    	{
-			senderId: "muffin",
-			text: text
+			 senderId: "muffin",
+			 text: text
 			}
 		) 
 		console.log("dummy data 2",DUMMY_DATA);
-		window.location.reload();
+		console.log(this.state);
+		this.setState({
+                        messages: [...this.state.messages, 
+
+                        					{
+											 senderId: "muffin",
+											 text: text
+											}
+
+                        ]
+                    })
+		
     }
 
     render() {
         return (
         	 <div className="app">
         	 <Title />
-             <MessageList messages= {this.state.messages} />
+             <MessageList messages = {this.state.messages} />
              <SendMessageForm sendMessage = {this.sendMessage} />
-
         	 </div>
-        )
-
-                
-
-        
+        )         
     }
 }
 
@@ -92,11 +86,9 @@ class MessageList extends React.Component {
 		  		)
 		  	})}
 		  </ul>
-		)
-	}
-}
-
-
+	 )
+   }
+ }
 
 
 class SendMessageForm extends React.Component {
@@ -109,17 +101,22 @@ class SendMessageForm extends React.Component {
 	  this.handleSubmit = this.handleSubmit.bind(this);
 	  this.handleChange = this.handleChange.bind(this);
 	}
-
-	handleSubmit(e){
-		e.preventDefault();
-		this.props.sendMessage(this.state.message);
-	}
-
+	
 	handleChange(e){
 		this.setState({
 			message: e.target.value
 		})
 	}
+
+	handleSubmit(e){
+		e.preventDefault();
+		this.props.sendMessage(this.state.message);
+		this.setState({
+				message: ''
+		})
+	}
+
+	
 
 	render () {
 	 return (
