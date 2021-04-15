@@ -24,6 +24,7 @@ class App extends React.Component {
 		}
 
 		this.sendMessage = this.sendMessage.bind(this);
+		this.UserNameId = this.UserNameId.bind(this);
 	}
 
 	componentDidMount(){
@@ -34,8 +35,6 @@ class App extends React.Component {
 				url: testToken
 			})
 		})
-	
-	
     }
 
     sendMessage(text) {
@@ -62,10 +61,15 @@ class App extends React.Component {
 		
     }
 
+    UserNameId(text){
+    	console.log(text);
+    }
+
     render() {
         return (
         	 <div className="app">
         	 <Title />
+        	 <UserNameId UserNameId = {this.UserNameId}/>
              <MessageList messages = {this.state.messages} />
              <SendMessageForm sendMessage = {this.sendMessage} />
         	 </div>
@@ -132,6 +136,46 @@ class SendMessageForm extends React.Component {
 	 	</form>	
 		)
 	}    	
+}
+
+class UserNameId extends React.Component {
+	constructor() {
+	  super();
+	  this.state = {
+	  		UserNameId: ''
+	  }
+
+	  this.handleChange = this.handleChange.bind(this);
+	  this.handleSubmit = this.handleSubmit.bind(this);
+	}
+	  
+	handleChange(e){
+		this.setState({
+			UserNameId: e.target.value
+		})
+	  }
+
+	handleSubmit(e){
+		e.preventDefault();
+		this.props.UserNameId(this.state.UserNameId);
+	}
+
+	render () {
+	 return (
+		<form
+		  onSubmit={this.handleSubmit}
+		  className = "user-name-id"
+		>
+	  	  <input 
+	 	   onChange={this.handleChange}
+	 	   value = {this.state.message}
+	 	   placeholder ="Type the username to enter the chat."
+	 	   type ="text"
+		  />
+		</form>
+			
+	 )
+	}
 }
 
 
